@@ -20,6 +20,7 @@ legacy/
 ├── app_v2.2.py     <-- Version 4.0: Decoupled Architecture & Gatekeeper Agent
 └── README.md       <-- Archive documentation & version history
 ```
+---
 
 ## 📂 File-to-Version Mapping Quick Reference
 
