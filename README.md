@@ -28,6 +28,7 @@ A CLI-based Resume Optimization Engine built with Python and the **Google Gemini
                                        ▼
                           [Structured Evaluation &
                              Token Usage Audit]
+```
 
 ---
 
@@ -63,6 +64,9 @@ A CLI-based Resume Optimization Engine built with Python and the **Google Gemini
 ├── .gitignore            # Git exclusion rules
 ├── requirements.txt      # Project dependencies
 └── README.md             # Project documentation
+```
+---
+
 🚀 Quickstart Guide
 1. Prerequisites
 Python 3.10 or higher installed.
@@ -90,7 +94,11 @@ Place your resume PDF in the root directory named my_resume.pdf and execute:
 
 Bash
 python appv2.2.py
+
+---
+
 📊 Sample CLI Output
+
 Plaintext
 ⚙️ [Path B] Passing query through Gatekeeper Agent for prompt optimization...
 ✅ Prompt density optimized successfully.
