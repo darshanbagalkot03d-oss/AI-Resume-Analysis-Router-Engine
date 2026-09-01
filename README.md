@@ -6,6 +6,7 @@ A CLI-based Resume Optimization Engine built with Python and the **Google Gemini
 
 ## 🏗️ System Architecture
 
+```text
                 ┌──────────────────────────────────────────────┐
                 │               User Selection                 │
                 └──────────────────────┬───────────────────────┘
