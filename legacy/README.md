@@ -18,7 +18,8 @@ legacy/
 ├── app_v2.py       <-- Version 3.0: Centralized Gemini Engine helper
 ├── app_v2.1.py     <-- Version 3.5: Session Persistence (while True) & Token Auditing
 ├── app_v2.2.py     <-- Version 4.0: Decoupled Architecture & Gatekeeper Agent
-└── README.md       <-- Archive documentation & version history```
+└── README.md       <-- Archive documentation & version history
+```
 
 ## 📂 File-to-Version Mapping Quick Reference
 
@@ -146,7 +147,8 @@ The culmination of the project's evolution, implementing intelligent routing to 
                                        ▼
                   ┌─────────────────────────────────────────┐
                   │     TOKEN AUDIT & REPORT OUTPUT         │
-                  └─────────────────────────────────────────┘```
+                  └─────────────────────────────────────────┘
+```
 
 ---
 
