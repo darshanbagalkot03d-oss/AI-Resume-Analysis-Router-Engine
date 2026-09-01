@@ -68,7 +68,7 @@ A CLI-based Resume Optimization Engine built with Python and the **Google Gemini
 ```
 ---
 
-🚀 Quickstart Guide
+## 🚀 Quickstart Guide
 1. Prerequisites
 Python 3.10 or higher installed.
 
@@ -77,41 +77,50 @@ A valid Google Gemini API Key.
 2. Installation
 Clone the repository and install dependencies:
 
-Bash
+```Bash
 git clone [https://github.com/YOUR_USERNAME/AI-Resume-Analysis-Router-Engine.git](https://github.com/YOUR_USERNAME/AI-Resume-Analysis-Router-Engine.git)
 cd AI-Resume-Analysis-Router-Engine
 pip install -r requirements.txt
+```
+
 3. Environment Configuration
 Copy .env.example to .env and insert your API key:
 
-Bash
+```Bash
 cp .env.example .env
 Edit .env:
 
 Code snippet
 GEMINI_API_KEY=AIzaSy...
+```
+
 4. Running the Engine
 Place your resume PDF in the root directory named my_resume.pdf and execute:
 
-Bash
+```Bash
 python appv2.2.py
+```
 
 ---
 
-📊 Sample CLI Output
+## 📊 Sample CLI Output
 
 Plaintext
 ⚙️ [Path B] Passing query through Gatekeeper Agent for prompt optimization...
 ✅ Prompt density optimized successfully.
 
-🚀 Analyzing resume against compiled prompt schema...
---------------------------------------------------------------------------------
+## 🚀 Analyzing resume against compiled prompt schema...
+
+```Bash
 [Token Audit] Est. Input Tokens: 1369
 
 ================================ REPORT OUTPUT ================================
-... [Structured Executive Report Output] ...
+                ... [Structured Executive Report Output] ...
 ================================================================================
+
 [Token Audit] Final Prompt Tokens:   1329
 [Token Audit] Final Output Tokens:   815
 [Token Audit] Total Tokens Consumed: 3827
+
+```
 
