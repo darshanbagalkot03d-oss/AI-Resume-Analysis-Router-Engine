@@ -60,7 +60,17 @@ A CLI-based Resume Optimization Engine built with Python and the **Google Gemini
 │   ├── __init__.py       # Config package exports
 │   ├── menu.py           # CLI menu display logic & option metadata
 │   └── prompts.py        # Master system prompts & Gatekeeper schema
-├── appv2.2.py            # Main CLI router, execution engine & cleanup handler
+├── legacy/               # Archived application version history
+│   ├── app_v0.py         # Initial baseline prototype script
+│   ├── app_v1.py         # Version 1 implementation
+│   ├── app_v1.1.py       # Version 1.1 iteration
+│   ├── app_v1.2.py       # Version 1.2 iteration
+│   ├── app_v1.3.py       # Version 1.3 iteration
+│   ├── app_v2.py         # Version 2 architecture refactor
+│   ├── app_v2.1.py       # Version 2.1 iteration
+│   ├── app_v2.2.py       # Version 2.2 iteration
+│   └── README.md         # Legacy folder documentation
+├── appv2.3.py            # Active execution runner / main application entry point
 ├── .env.example          # Environment variable template
 ├── .gitignore            # Git exclusion rules
 ├── requirements.txt      # Project dependencies
