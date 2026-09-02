@@ -265,9 +265,10 @@ Sincerely,
 #             gemini_client.files.delete(name=uploaded_file.name)
 #             print("Cleanup complete.")
 
+# One Addition to the previous code block : CENTRAL GEMINI PROCESSING HELPER --> calculating tokens 
 def execute_gemini_analysis(pdf_path, prompt_text, case_title):
     """Handles uploading PDF to Gemini, executing the prompt, calculating tokens, and deleting the file safely."""
-    print(f"\n--- Running {case_title} (Gemini 2.5 Flash) ---")
+    print(f"\n--- Running {case_title} (Gemini 3.6 Flash) ---")
     uploaded_file = None
     try:
         print("Uploading resume to Gemini Files API...")
@@ -276,14 +277,14 @@ def execute_gemini_analysis(pdf_path, prompt_text, case_title):
         # 1. ANALYZE INPUT TOKENS BEFORE GENERATION
         print("Calculating input tokens...")
         token_info = gemini_client.models.count_tokens(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=[uploaded_file, prompt_text]
         )
         print(f"[Token Audit] Estimated Input Tokens (PDF + Prompt): {token_info.total_tokens}")
         
         print("Analyzing document...")
         response = gemini_client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=[uploaded_file, prompt_text]
         )
         
@@ -318,11 +319,11 @@ def main():
         print("   AI RESUME ANALYSIS ROUTER & STRATEGY   ")
         print("==========================================")
         print("Select Analysis Mode:")
-        print("1. Standalone Audit & Skill Gaps (Gemini 2.5 Flash)")
-        print("2. Resume vs Job Description Match (Gemini 2.5 Flash)")
-        print("3. Strict Non-Repeated Bullet Audit (Gemini 2.5 Flash)")
-        print("4. Market Benchmark Cross-Referencing (Gemini 2.5 Flash)")
-        print("5. Tailored Cover Letter Generator (Gemini 2.5 Flash)")
+        print("1. Standalone Audit & Skill Gaps (Gemini 3.6 Flash)")
+        print("2. Resume vs Job Description Match (Gemini 3.6 Flash)")
+        print("3. Strict Non-Repeated Bullet Audit (Gemini 3.6Flash)")
+        print("4. Market Benchmark Cross-Referencing (Gemini 3.6 Flash)")
+        print("5. Tailored Cover Letter Generator (Gemini 3.6 Flash)")
         print("6. Exit")
         
         user_choice = input("\nEnter Choice (1-6): ").strip()

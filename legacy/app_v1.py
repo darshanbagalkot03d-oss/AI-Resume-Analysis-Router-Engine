@@ -59,13 +59,13 @@ Act as a Deep-Tech Career Strategist. Cross-reference the candidate's resume aga
 # ==========================================
 
 def run_case_1_standalone_audit(pdf_path):
-    """Case 1: Quick Skill Extraction & Role Fit using Gemini 2.5 Flash"""
+    """Case 1: Quick Skill Extraction & Role Fit using Gemini 3.6 Flash"""
     print("\n--- Running Case 1: Standalone Audit & Skill Gap Analysis (Gemini) ---")
     uploaded_file = None
     try:
         uploaded_file = gemini_client.files.upload(file=pdf_path)
         response = gemini_client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=[uploaded_file, PROMPT_CASE_1]
         )
         print(response.text)
@@ -120,7 +120,7 @@ def main():
     print("   AI RESUME ANALYSIS ROUTER & STRATEGY   ")
     print("==========================================")
     print("Select Analysis Mode:")
-    print("1. Standalone Audit & Skill Gaps (Gemini 2.5 Flash)")
+    print("1. Standalone Audit & Skill Gaps (Gemini 3.6 Flash)")
     print("2. Resume vs Job Description Match (GPT-4o)")
     print("3. Strict Non-Repeated Bullet Audit (Claude 3.5 Sonnet)")
     print("4. Market Benchmark Cross-Referencing (GPT-4o)")

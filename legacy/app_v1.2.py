@@ -111,48 +111,25 @@ Compare the provided candidate resume against the Target Job Description below. 
 PROMPT_CASE_3 = """
 
 # ROLE & PERSONA
-
 You are a Principal Software Architect and Strict Code/Resume Reviewer. You communicate with absolute brevity, technical rigor, and zero conversational filler.
-
-
-
 # OBJECTIVE
-
 Perform a hyper-concise, non-redundant audit of the resume. Output strictly formatted bullet points.
-
-
-
 # CRITICAL CONSTRAINTS (STRICT COMPLIANCE REQUIRED)
-
 1. **ZERO DUPLICATION:** Every single bullet point must contain unique information. Do not repeat skills, reasons, or tools across sections.
-
 2. **NO FILLER TEXT:** Do not include introductory or concluding phrases (e.g., "Here is your analysis", "Overall", "In conclusion"). Start immediately with the first heading.
-
 3. **STRICT BULLETS ONLY:** Use sub-bullet hierarchy exclusively. No paragraphs allowed.
-
-
 
 # STRICT OUTPUT SCHEMA
 
-
-
 ## Core Technical Stack & Differentiators
-
 * **Primary Languages:** [Unique list]
-
 * **Core Frameworks & Tools:** [Unique list]
-
 * **Key Hardware / Edge Exposure:** [Unique list]
-
-
 
 ## Technical Limitations & Infrastructure Gaps
 
 * **Backend & Cloud Deficits:** [List 2 distinct gaps without repeating tools]
-
 * **Framework Gaps:** [List 2 distinct missing tools required for modern production]
-
-
 
 ## Top Role Matches & Non-Repeated Rationales
 
@@ -160,14 +137,10 @@ Perform a hyper-concise, non-redundant audit of the resume. Output strictly form
 
 * **[Role 2 Title]:** [Single sentence technical rationale using distinct, non-overlapping project evidence]
 
-
-
 ## Code & Portfolio Action Items
 
 * **Action Item 1:** [Specific engineering update to make immediately]
-
 * **Action Item 2:** [Specific engineering update to make immediately]
-
 * **Action Item 3:** [Specific engineering update to make immediately]
 
 """
@@ -306,11 +279,11 @@ def main():
         print("   AI RESUME ANALYSIS ROUTER & STRATEGY   ")
         print("==========================================")
         print("Select Analysis Mode:")
-        print("1. Standalone Audit & Skill Gaps (Gemini 2.5 Flash)")
-        print("2. Resume vs Job Description Match (Gemini 2.5 Flash)")
-        print("3. Strict Non-Repeated Bullet Audit (Gemini 2.5 Flash)")
-        print("4. Market Benchmark Cross-Referencing (Gemini 2.5 Flash)")
-        print("5. Tailored Cover Letter Generator (Gemini 2.5 Flash)")
+        print("1. Standalone Audit & Skill Gaps (Gemini 3.6 Flash)")
+        print("2. Resume vs Job Description Match (Gemini 3.6 Flash)")
+        print("3. Strict Non-Repeated Bullet Audit (Gemini 3.6 Flash)")
+        print("4. Market Benchmark Cross-Referencing (Gemini 3.6 Flash)")
+        print("5. Tailored Cover Letter Generator (Gemini 3.6 Flash)")
         print("6. Exit")
         
         user_choice = input("\nEnter Choice (1-6): ").strip()

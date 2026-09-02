@@ -1,3 +1,4 @@
+# This file is extended version of file app_v1.py <-- added with Master Prompts.
 import os
 import sys
 from dotenv import load_dotenv
@@ -6,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Client Initializations
-from google import genai
+from google import genai 
 import openai
 import anthropic
 
@@ -23,7 +24,7 @@ RESUME_PATH = r"path_to_your/my_resume.pdf"
 
 # Master Prompt 1: Standalone Audit & Skill Gap Analysis
 # Variable: PROMPT_CASE_1
-# Target Engine: gemini-2.5-flash
+# Target Engine: gemini-3.6-flash
 
 PROMPT_CASE_1 = """
 # ROLE & PERSONA
@@ -207,7 +208,7 @@ Cross-reference the candidate's resume against current industry-standard benchma
 # ==========================================
 
 def run_case_1_standalone_audit(pdf_path):
-    """Case 1: Quick Skill Extraction & Role Fit using Gemini 2.5 Flash"""
+    """Case 1: Quick Skill Extraction & Role Fit using Gemini 3.6 Flash"""
     print("\n--- Running Case 1: Standalone Audit & Skill Gap Analysis (Gemini) ---")
     uploaded_file = None
     try:
@@ -268,7 +269,7 @@ def main():
     print("   AI RESUME ANALYSIS ROUTER & STRATEGY   ")
     print("==========================================")
     print("Select Analysis Mode:")
-    print("1. Standalone Audit & Skill Gaps (Gemini 2.5 Flash)")
+    print("1. Standalone Audit & Skill Gaps (Gemini 3.6 Flash)")
     print("2. Resume vs Job Description Match (GPT-4o)")
     print("3. Strict Non-Repeated Bullet Audit (Claude 3.5 Sonnet)")
     print("4. Market Benchmark Cross-Referencing (GPT-4o)")

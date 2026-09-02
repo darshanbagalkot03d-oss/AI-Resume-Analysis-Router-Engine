@@ -106,6 +106,7 @@ python appv2.2.py
 ## 📊 Sample CLI Output
 
 Plaintext
+
 ⚙️ [Path B] Passing query through Gatekeeper Agent for prompt optimization...
 ✅ Prompt density optimized successfully.
 

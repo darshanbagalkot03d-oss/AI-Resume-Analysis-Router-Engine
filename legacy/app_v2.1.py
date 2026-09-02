@@ -1,3 +1,4 @@
+# This file is Uncluttered version of file app_v2.py <-- added with High Density Prompts for Token Optimisation.
 import os
 from dotenv import load_dotenv
 from google import genai
@@ -172,7 +173,7 @@ def compress_prompt_via_gatekeeper(verbose_prompt: str) -> str:
     """
 
     response = gemini_client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.6-flash",
         config={
             "system_instruction": gatekeeper_sys_inst,
             "temperature": 0.1, 
@@ -199,20 +200,20 @@ def execute_gemini_analysis(pdf_path, final_prompt, case_title, original_verbose
         # Token Audit Generation
         if original_verbose_prompt:
             uncompressed_tokens = gemini_client.models.count_tokens(
-                model="gemini-2.5-flash",
+                model="gemini-3.6-flash",
                 contents=[uploaded_file, original_verbose_prompt]
             )
             print(f"[Token Audit] Est. Tokens if uncompressed: {uncompressed_tokens.total_tokens}")
             
         final_input_tokens = gemini_client.models.count_tokens(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=[uploaded_file, final_prompt]
         )
         print(f"[Token Audit] Actual Input Tokens executing: {final_input_tokens.total_tokens}")
         
         print("Analyzing document...")
         response = gemini_client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-3.6-flash",
             contents=[uploaded_file, final_prompt]
         )
         

@@ -1,16 +1,16 @@
-
+# Initial and post installation of genai test script follows:
 # import os
 # from google import genai
 # client = genai.Client()
 # Option 1: Set your key directly in the script (or set it in your environment variable GOOGLE_API_KEY)
 
-# Initialize the Gemini model
-#model = genai.GenerativeModel("gemini-3.6-flash")
+# # Initialize the Gemini model
+# model = genai.GenerativeModel("gemini-3.6-flash")
 # Call the Interactions API using the latest model
-# interaction? = client.interactions.create(
-    # model="?gemini-3.7-flash",
-    #genai.configure(api_key="Your_key")
-    # input="Act as an expert career advisor with deep knowledge of the 2026 technology job market. Carefully analyze the provided resume text. Extract the core technical skills, competencies, and project details. Cross-reference these skills and projects with the current landscape to provide a structured list of suitable job roles, along with a clear rationale for why they fit based on the resume highlights.",
+# interaction= client.interactions.create(
+#     model="gemini-3.6-flash",
+#     genai.configure(api_key="Your_key")
+#     input="Act as an expert career advisor with deep knowledge of the 2026 technology job market. Carefully analyze the provided resume text. Extract the core technical skills, competencies, and project details. Cross-reference these skills and projects with the current landscape to provide a structured list of suitable job roles, along with a clear rationale for why they fit based on the resume highlights.",
 # )
 # Generate text
 # response = model.generate_content("Write a 2-sentence pitch for a smart coffee mug.")
@@ -43,10 +43,10 @@ try:
         model="gemini-3.6-flash", # Corrected model name
         contents=[
             resume_file,
-            # """Act as an expert career advisor with deep knowledge of the technology job market. 
-# Carefully analyze the provided resume PDF. Extract the core technical skills, competencies, and project details. 
-# Cross-reference these skills and projects with the current landscape to provide a structured list of suitable job roles, 
-# along with a clear rationale for why they fit based on the resume highlights."""
+            #Initial Good Prompt used for testing the resume analysis by the model genai model gemini 3.6 flash.
+             """Act as an expert career advisor with deep knowledge of the technology job market.Carefully analyze the provided resume PDF. Extract the core technical skills, competencies, and project details.Cross-reference these skills and projects with the current landscape to provide a structured list of suitable job roles,along with a clear rationale for why they fit based on the resume highlights."""
+
+            #Primary Upgraded Prompt with Great to Master Level used to get the resume analysed with explicitly specifing to get the response where  we get from the enterprise grade websites/tools in SaaS.
             """# ROLE & PERSONA
 You are a Principal Technical Recruiter and Senior AI Career Strategist with 15+ years of experience hiring for top tech enterprises, high-growth GenAI startups, and deep-tech hardware/software companies. You specialize in analyzing developer profiles, technical portfolios, and engineering resumes to map candidates to high-leverage market roles.
 
