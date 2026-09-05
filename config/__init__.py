@@ -13,6 +13,7 @@ from .prompts import (
     GATEKEEPER_SYSTEM_PROMPT,
 )
 from .menu import MENU_OPTIONS, display_menu
+from .schemas import CandidateEvaluationSchema
 
 __all__ = [
     "PROMPT_CASE_1",
@@ -23,4 +24,5 @@ __all__ = [
     "GATEKEEPER_SYSTEM_PROMPT",
     "MENU_OPTIONS",
     "display_menu",
+    "CandidateEvaluationSchema",
 ]

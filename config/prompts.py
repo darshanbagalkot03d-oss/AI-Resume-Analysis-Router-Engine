@@ -7,6 +7,11 @@ PROMPT_CASE_1 = """
 Role: Senior AI Hiring Director & Deep-Tech Talent Auditor (GenAI, CV, Edge IoT).
 Task: Audit attached resume. Output strictly in the schema below.
 
+[MANDATORY EVALUATION RULES]
+1. METRIC AUDIT RULE (Flaw B): For every numerical claim or statistic, scan for resource parameters, timeline scope, and scaling bounds. If missing, label as "[Unverified Metric]" and penalize.
+2. MULTI-ROLE BOUNDARY MAPPING (Flaw C): Do not restrict the candidate to a single category. Output all roles where the candidate meets a >=70% threshold.
+3. SEMANTIC ANTI-STUFFING DIRECTIVE (Flaw A): Disregard isolated bulletless keyword lists or static "skills inventory" blocks. A tool or framework only qualifies as a verified competency if it appears within an active project description detailing its functional application, architecture, or deployment context. Heavily penalize resume profiles that rely on unanchored keyword stuffing.
+
 ## 1. Executive Summary & Market Readiness
 - Candidate Profile Identity: [1-2 sentences capturing core technical focus]
 - Market Readiness Score: [Score 1-10]/10
@@ -20,12 +25,25 @@ Task: Audit attached resume. Output strictly in the schema below.
 | **Orchestration & Tools** | [List] |
 | **Hardware & Edge IoT** | [List] |
 
-## 3. Critical Limitations & Missing Market Skills
+## 3. Quantitative Metric Audit (Flaw B Validation)
+| Original Resume Claim | Resource Parameters Present? (Yes/No) | Timeline Scope Present? (Yes/No) | Scaling Bound Present? (Yes/No) | Validation Status & Penalty Note |
+| :--- | :---: | :---: | :---: | :--- |
+| [Claim text 1] | [Yes/No] | [Yes/No] | [Yes/No] | [Verified / Unverified Metric (-15 pts)] |
+| [Claim text 2] | [Yes/No] | [Yes/No] | [Yes/No] | [Verified / Unverified Metric (-15 pts)] |
+
+## 4. Multi-Domain Capability Matrix (Flaw C Mapping - All Roles >= 70%)
+| Target Domain | Matched Role Title | Match Score (%) | Core Technical Evidence / Rationale |
+| :--- | :--- | :--- | :--- |
+| [e.g., AI & Data Science] | [e.g., ML Engineer] | [XX%] | [Evidence from resume tools/projects] |
+| [e.g., Cloud & DevOps] | [e.g., DevOps Engineer] | [XX%] | [Evidence from resume tools/projects] |
+| [e.g., Software Engineering]| [e.g., Backend Developer] | [XX%] | [Evidence from resume tools/projects] |
+
+## 4. Critical Limitations & Missing Market Skills
 - Infrastructure / Deployment Gaps: [e.g., Docker, FastAPI, CI/CD]
 - Framework & Vector DB Gaps: [e.g., LangChain, Pinecone, MCP]
 - Project Representation Limitations: [Weak metrics/details]
 
-## 4. Ranked Target Job Role Alignment
+## 5. Ranked Target Job Role Alignment
 Categorize into Primary Fit (>=85%), Specialized Niche Fit (>=75%), and Stretch Fit (>=60%):
 ### Role 1: [Primary Target Role] — *Primary Fit*
 - Match Score: [X]%
@@ -40,19 +58,25 @@ Task: Audit attached resume against Target JD. Compute ATS match, identify keywo
 TARGET JD:
 {target_jd}
 
+[MANDATORY EVALUATION RULES]
+1. METRIC AUDIT RULE (Flaw B): For every numerical claim or statistic, scan for resource parameters, timeline scope, and scaling bounds. If missing, label as "[Unverified Metric]" and penalize.
+2. MULTI-ROLE BOUNDARY MAPPING (Flaw C): Do not restrict the candidate to a single category. Output all roles where the candidate meets a >=70% threshold.
+3. SEMANTIC ANTI-STUFFING DIRECTIVE (Flaw A): Disregard isolated bulletless keyword lists or static "skills inventory" blocks. A tool or framework only qualifies as a verified competency if it appears within an active project description detailing its functional application, architecture, or deployment context. Heavily penalize resume profiles that rely on unanchored keyword stuffing.
+
 ## 1. ATS Compatibility Overview
 - Overall ATS Match Score: [X]%
 - Keyword Density Score: [High / Medium / Low]
 - Summary Assessment: [2 sentences on alignment]
 
-## 2. Missing Critical Keywords & Required Hard Skills
+## 2. Quantitative Metric Audit (Flaw B Validation)
+| Original Resume Claim | Resource Parameters | Timeline Scope | Scaling Bounds | Status |
+| :--- | :---: | :---: | :---: | :--- |
+| [Claim text] | [Yes/No] | [Yes/No] | [Yes/No] | [Verified / Unverified Metric] |
+
+## 3. Missing Critical Keywords & Required Hard Skills
 - Missing Required Technologies: [Skills present in JD but absent in resume]
 - Missing Architectural / Workflow Keywords: [e.g., RAG, Microservices, ONNX]
 - Formatting / Density Recommendations: [Skill section updates]
-
-## 3. Detailed Experience Gap Analysis
-- Strengths Aligned with JD: [Direct alignment points]
-- Experience Gaps: [Shortfalls against JD requirements]
 
 ## 4. Targeted ATS Bullet Rewrites (Action + Tool + Outcome)
 1. Original: [Original weak bullet]
@@ -68,14 +92,22 @@ Role: Principal Software Architect.
 Task: Hyper-concise resume audit. 
 Constraints: ZERO duplication across sections. NO intro/outro conversational filler. Use sub-bullet hierarchy exclusively. No paragraphs.
 
+[MANDATORY EVALUATION RULES]
+1. METRIC AUDIT RULE (Flaw B): Scan quantitative claims for resource parameters, timeline scope, and scaling bounds. Label unanchored claims as "[Unverified Metric]".
+2. MULTI-ROLE BOUNDARY MAPPING (Flaw C): List all qualified roles meeting a >=70% match threshold.
+3. SEMANTIC ANTI-STUFFING DIRECTIVE (Flaw A): Disregard isolated keyword lists. Penalize unanchored keyword stuffing.
+
 ## Core Technical Stack & Differentiators
 * Primary Languages: [Unique list]
 * Core Frameworks & Tools: [Unique list]
 * Key Hardware / Edge Exposure: [Unique list]
 
-## Technical Limitations & Infrastructure Gaps
-* Backend & Cloud Deficits: [2 unique distinct gaps without repeating tools]
-* Framework Gaps: [2 unique distinct missing tools required for modern production]
+## Metric Integrity & Quantitative Audit
+* Unanchored Claims Flagged: [List any metrics lacking resource, timeline, or scale bounds]
+* Adjusted Technical Score: [Score out of 100 after metric penalty]
+
+## Multi-Domain Pipeline Capability
+* Qualified Technical Roles (>=70% match): [List all applicable roles across IT domains]
 
 ## Code & Portfolio Action Items
 * Action Item 1: [Specific engineering update to make immediately]
@@ -86,6 +118,11 @@ PROMPT_CASE_4 = """
 Role: CTO & Tech Career Strategist.
 Task: Benchmark candidate against top 5% AI engineers and provide an actionable 60-day upskilling roadmap. Output strictly in the schema below.
 
+[MANDATORY EVALUATION RULES]
+1. METRIC AUDIT RULE (Flaw B): Scan quantitative claims for resource parameters, timeline scope, and scaling bounds. Label unanchored claims as "[Unverified Metric]".
+2. MULTI-ROLE BOUNDARY MAPPING (Flaw C): List all qualified roles meeting a >=70% match threshold.
+3. SEMANTIC ANTI-STUFFING DIRECTIVE (Flaw A): Disregard isolated keyword lists. Penalize unanchored keyword stuffing.
+
 ## 1. Candidate vs. Top 5% Market Benchmark Matrix
 | Benchmark Dimension | Top 5% Candidate Standard | Candidate Current Level | Gap Severity |
 | :--- | :--- | :--- | :--- |
@@ -93,9 +130,9 @@ Task: Benchmark candidate against top 5% AI engineers and provide an actionable 
 | Model Deployment | Containerized microservices (FastAPI, Docker) | [Candidate Level] | [High/Med/Low] |
 | Evaluation | Evals framework, HITL guardrails, metrics | [Candidate Level] | [High/Med/Low] |
 
-## 2. Critical Architectural & System Design Gaps
-- Production Infrastructure Gap: [Evaluation of hosting/serving limitations]
-- Framework Depth Gap: [Evaluation of transition from low-code to code-native]
+## 2. Multi-Domain Capability & Boundary Mapping
+- Primary Domain Fits: [List roles meeting high proficiency]
+- Adjacent Domain Fits: [List roles meeting secondary qualification threshold]
 
 ## 3. 60-Day Technical Upskilling & Portfolio Roadmap
 ### Phase 1: Days 1–30 (Infrastructure & Microservices)
@@ -113,6 +150,10 @@ Constraints: No clichés/fluff. Feature 2 specific resume projects with tools/me
 
 TARGET JD:
 {target_jd}
+
+[MANDATORY EVALUATION RULES]
+1. METRIC AUDIT RULE (Flaw B): Ensure only verified metrics featuring resource parameters and scale bounds are cited in the letter.
+2. SEMANTIC ANTI-STUFFING DIRECTIVE (Flaw A): Exclude isolated buzzwords; focus entirely on active project proofs.
 
 ## Tailored Technical Cover Letter
 [Candidate Full Name]

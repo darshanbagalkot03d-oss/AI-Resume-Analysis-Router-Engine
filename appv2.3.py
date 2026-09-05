@@ -1,14 +1,17 @@
 """
-Main Execution Engine & CLI Router for AI Resume Audit System.
-Uses google-genai SDK with clean config imports and robust session handling.
+Main Execution Engine & CLI Router for AI Resume Audit System (Pydantic Structured Output Edition).
 """
 
 import os
 import sys
 from dotenv import load_dotenv
 from google import genai
+# from mistralai import Mistral
+# from pypdf import PdfReader
 
-# Clean imports from local config package
+# API_KEY = os.getenv("MISTRAL_API_KEY")
+# client = Mistral(api_key=API_KEY)
+# MODEL_NAME = "mistral-large-latest"
 from config import (
     PROMPT_CASE_1,
     PROMPT_CASE_2,
@@ -19,8 +22,8 @@ from config import (
     MENU_OPTIONS,
     display_menu,
 )
+from config.schemas import CandidateEvaluationSchema
 
-# Load environment variables
 load_dotenv()
 API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -28,16 +31,12 @@ if not API_KEY:
     print("❌ Error: GEMINI_API_KEY not found in .env file.")
     sys.exit(1)
 
-# Initialize Gemini Client
 client = genai.Client(api_key=API_KEY)
-
-# UPDATED: Updated model string to supported flash tier
 MODEL_NAME = "gemini-3.6-flash"
-RESUME_PATH = "Darshan_Resume_Nidec.pdf"
+RESUME_PATH = "C:\Users\Admin\Desktop\Personal_Project\Exploring_the_Gemini_API_key/my_resume.pdf"
 
 
 def get_job_description() -> str:
-    """Collects multi-line Job Description input from user."""
     print("\n📝 Paste the Target Job Description (Type 'END' on a new line when finished):")
     lines = []
     while True:
@@ -49,7 +48,6 @@ def get_job_description() -> str:
 
 
 def get_custom_query() -> str:
-    """Collects multi-line custom user queries/instructions for Choice 6."""
     print("\n💬 Paste your custom question/instruction & JD below (Type 'END' on a new line when finished):")
     lines = []
     while True:
@@ -61,12 +59,7 @@ def get_custom_query() -> str:
 
 
 def run_gatekeeper_agent(user_query: str) -> str:
-    """
-    Path B: Compiles unstructured user query into structured Level-2 prompt schema.
-    Uses temperature=0.1 for deterministic prompt output.
-    """
     print("\n⚙️ [Path B] Passing query through Gatekeeper Agent for prompt optimization...")
-    
     response = client.models.generate_content(
         model=MODEL_NAME,
         contents=f"Compress and structure this prompt:\n\n{user_query}",
@@ -75,38 +68,55 @@ def run_gatekeeper_agent(user_query: str) -> str:
             "temperature": 0.1,
         }
     )
-    optimized_prompt = response.text.strip()
-    print("✅ Prompt density optimized successfully.")
-    return optimized_prompt
+    return response.text.strip()
 
 
 def execute_resume_audit(prompt: str, resume_file_ref):
-    """
-    Executes model inference against uploaded PDF resume reference.
-    Includes token audit metrics and exception isolation.
-    """
-    print("\n🚀 Analyzing resume against compiled prompt schema...\n")
+    print("\n🚀 Analyzing resume with Pydantic schema validation & programmatic parsing...\n")
     print("-" * 80)
     
     try:
-        # Pre-execution Token Audit Estimation
         input_tokens = client.models.count_tokens(
             model=MODEL_NAME,
             contents=[resume_file_ref, prompt]
         )
         print(f"[Token Audit] Est. Input Tokens: {input_tokens.total_tokens}")
 
-        # Model Inference
+        # Model Inference enforced with structured JSON Pydantic schema
         response = client.models.generate_content(
             model=MODEL_NAME,
-            contents=[resume_file_ref, prompt]
+            contents=[resume_file_ref, prompt],
+            config={
+                "response_mime_type": "application/json",
+                "response_schema": CandidateEvaluationSchema,
+            }
         )
         
-        print("\n" + "=" * 50 + " REPORT OUTPUT " + "=" * 50 + "\n")
-        print(response.text)
+        print("\n" + "=" * 50 + " STRUCTURED EVALUATION REPORT " + "=" * 50 + "\n")
+        
+        # Parse type-safe data model directly
+        evaluation: CandidateEvaluationSchema = response.parsed
+        
+        print(f"📊 Adjusted Technical Score: {evaluation.adjusted_technical_score} / 100\n")
+        
+        print("🔍 Quantitative Metric Audit:")
+        for audit in evaluation.metrics_audit:
+            print(f"  • Claim: '{audit.original_claim}'")
+            print(f"    Status: {audit.validation_status} | Resource: {audit.has_resource_params} | Timeline: {audit.has_timeline_scope} | Scale: {audit.has_scaling_bound}")
+        # ADDED: Flaw A Skill Proof Terminal Display Loop
+        print("\n🛡️ Skill Integrity & Project Proof Audit (Flaw A Check):")
+        for proof in getattr(evaluation, "skill_proofs", []):
+            status = "✅ Project Verified" if proof.has_project_proof else "⚠️ Unanchored Skill"
+            print(f"  • Skill: {proof.skill_name} | Status: {status}")
+            print(f"    Evidence: {proof.evidence_snippet}")
+
+        print("\n🎯 Multi-Role Capability Mapping (>= 70% Match):")
+        for role in evaluation.evaluated_roles:
+            print(f"  • {role.role_name} ({role.match_score}% Match)")
+            print(f"    Rationale: {role.reasoning}")
+
         print("\n" + "=" * 115)
         
-        # Post-execution Token Audit Metadata
         if response.usage_metadata:
             print(f"[Token Audit] Final Prompt Tokens:   {response.usage_metadata.prompt_token_count}")
             print(f"[Token Audit] Final Output Tokens:   {response.usage_metadata.candidates_token_count}")
@@ -143,7 +153,6 @@ def main():
                 break
 
             try:
-                # Handle Job Description input for Options requiring JD
                 target_jd = ""
                 if MENU_OPTIONS[choice_num]["requires_jd"]:
                     target_jd = get_job_description()
@@ -151,7 +160,6 @@ def main():
                         print("⚠️ Job Description cannot be empty for this option.")
                         continue
 
-                # Route to appropriate Prompt Schema
                 if choice_num == 1:
                     final_prompt = PROMPT_CASE_1
                 elif choice_num == 2:
@@ -169,14 +177,12 @@ def main():
                         continue
                     final_prompt = run_gatekeeper_agent(raw_user_query)
 
-                # Execute model call
                 execute_resume_audit(final_prompt, uploaded_file)
 
             except Exception as iteration_error:
                 print(f"⚠️ Action failed: {iteration_error}. Returning to main menu...")
 
     finally:
-        # Cleanup uploaded cloud file reference
         print(f"\n🧹 Deleting cloud file reference '{uploaded_file.name}'...")
         try:
             client.files.delete(name=uploaded_file.name)
