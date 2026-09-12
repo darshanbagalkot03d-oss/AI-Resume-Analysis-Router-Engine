@@ -6,9 +6,9 @@ This repository currently houses the core backend evaluation engine (Phase 1), o
 
 The system utilizes a dual-branch execution model driven by a single unified runner (appv3.0.py):
 
-* Branch A (Ad-Hoc Single-File Router): An interactive audit engine for evaluating individual resumes against static prompts, specific job descriptions, or unstructured custom queries optimized by a dedicated Gatekeeper Agent.
+* **Branch A** (Ad-Hoc Single-File Router): An interactive audit engine for evaluating individual resumes against static prompts, specific job descriptions, or unstructured custom queries optimized by a dedicated Gatekeeper Agent.
 
-* Branch B (Batch Automated Testing Harness): A headless pipeline (backend_system/generate_corpus.py → appv3.0.py → backend_system/compute_benchmarks.py) designed to stress-test system prompts against multi-domain synthetic edge-case corpora using strictly enforced Pydantic schemas and zero-token local analytics.
+* **Branch B** (Batch Automated Testing Harness): A headless pipeline (backend_system/generate_corpus.py → appv3.0.py → backend_system/compute_benchmarks.py) designed to stress-test system prompts against multi-domain synthetic edge-case corpora using strictly enforced Pydantic schemas and zero-token local analytics.
 
 ---
 
@@ -49,23 +49,23 @@ Database integration for persistent user session state and authentication
 
 ---
 ## ✨ Key Features
-* Pydantic Structured Evaluation Schema: Enforces strict, type-safe JSON output (CandidateEvaluationSchema) tracking Flaw A (Unbacked Skills), Flaw B (Unanchored Metrics), and Flaw C (Multi-Role Boundary Mapping).
+* **Pydantic Structured Evaluation Schema:** Enforces strict, type-safe JSON output (CandidateEvaluationSchema) tracking Flaw A (Unbacked Skills), Flaw B (Unanchored Metrics), and Flaw C (Multi-Role Boundary Mapping).
 
-* Dual-Path Prompt Routing (Branch A):
+* **Dual-Path Prompt Routing (Branch A):**
 
-    * Fast Lane: Static system prompts (PROMPT_CASE_1 through 5) for talent audits, ATS job description alignment, architectural density, market benchmarking, and cover letter generation.
+    * **Fast Lane:** Static system prompts (PROMPT_CASE_1 through 5) for talent audits, ATS job description alignment, architectural density, market benchmarking, and cover letter generation.
 
-    * Smart Lane: A dedicated Gatekeeper Agent (temperature=0.1) that translates informal, unstructured user queries into Level-2  structured prompt schemas before inference.
+    * **Smart Lane:** A dedicated Gatekeeper Agent (temperature=0.1) that translates informal, unstructured user queries into Level-2  structured prompt schemas before inference.
 
-* Automated Batch Testing Harness (Branch B):
+* **Automated Batch Testing Harness (Branch B):**
 
-    * Synthetic Edge-Case Generation: Automatically creates multi-domain test PDFs with embedded resume flaws (keyword stuffing, unanchored floating metrics).
+    * **Synthetic Edge-Case Generation:** Automatically creates multi-domain test PDFs with embedded resume flaws (keyword stuffing, unanchored floating metrics).
 
-    * Headless Pipeline Processing: Scans subdirectories, executes audits with exponential backoff rate-limit handling, and purges uploaded files from Gemini Cloud storage post-evaluation.
+    * **Headless Pipeline Processing:** Scans subdirectories, executes audits with exponential backoff rate-limit handling, and purges uploaded files from Gemini Cloud storage post-evaluation.
 
-    * Zero-Token Local Analytics: Computes system-wide performance metrics, severity capture rates, and schema stability statistics locally without incurring additional API token costs.
+    * **Zero-Token Local Analytics:** Computes system-wide performance metrics, severity capture rates, and schema stability statistics locally without incurring additional API token costs.
 
-* Real-Time Token Auditing: Pre-calculates estimated input tokens and logs final prompt, output, and cumulative token consumption post-inference.
+* **Real-Time Token Auditing:** Pre-calculates estimated input tokens and logs final prompt, output, and cumulative token consumption post-inference.
 ---
 
 ## 📂 Project Structure

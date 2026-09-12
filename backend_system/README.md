@@ -136,7 +136,7 @@ python appv3.0.py --file "test_corpus/test_corpus/AI_DataScience/my_resume.pdf" 
 Ask specific questions or provide custom evaluation instructions for a resume. This query will be optimized by the Gatekeeper Agent:
 
 ```Bash
-python appv3.0.py --file "backend_system/test_corpus/AI_DataScience/my_resume.pdf" --custom "Evaluate if this candidate has hands-on experience in PyTorch, YOLO model deployment, and n8n workflow automation."
+python appv3.0.py --file "+test_corpus/AI_DataScience/my_resume.pdf" --custom "Evaluate if this candidate has hands-on experience in PyTorch, YOLO model deployment, and n8n workflow automation."
 ```
 
 ---
