@@ -74,7 +74,7 @@ def generate_synthetic_resumes(count_per_archetype: int = 3):
     """
     print("🚀 Starting Synthetic Resume Corpus Generation...\n")
     
-    base_dir = "test_corpus"
+    base_dir = "backend_system/test_corpus"
     os.makedirs(base_dir, exist_ok=True)
 
     for domain_key, domain_label in DOMAINS.items():
