@@ -1,6 +1,36 @@
 # 🚀 AI Resume Audit, Optimization & Benchmarking Engine
 
-An enterprise-grade, CLI-driven AI Resume Audit and Evaluation Platform built with Python and the Google Gemini API SDK (google-genai).
+A CLI-driven AI Resume Audit and Evaluation Platform built with Python and the Google Gemini API SDK (google-genai).
+
+---
+
+## 🙋 My Role in This Project
+
+I built this to learn — not to showcase raw coding output. My goals were to understand how modern resume-analysis systems actually work under the hood, get hands-on exposure to how a small SaaS-style product is structured end-to-end, and develop a real feel for prompt optimization.
+
+What I did:
+
+* Designed the evaluation logic — the Flaw A/B/C framework (keyword-stuffing detection, unanchored-metric validation, role-boundary mapping) and the Pydantic schemas that enforce it
+* Designed the dual-branch execution model (ad-hoc single-file audits vs. automated batch benchmarking) and the routing logic between them
+* Designed and iterated on the prompt architecture, including the Gatekeeper Agent pattern that turns unstructured user input into structured evaluation requests
+* Defined the evaluation cases (case_1 through case_5) and what each one should measure
+* Tested, evaluated, and refined the system's outputs against the synthetic test corpus
+
+What AI tools did:
+
+* Wrote the actual Python implementation (appv3.0.py, the corpus generator, the benchmark calculator) based on the design above
+
+I'm sharing this openly because architecting a system, defining what "correct" output looks like, and directing an AI to implement and iterate on it is itself a skill worth being transparent about — not something to obscure.
+
+This repository serves as an **architectural lab** built using AI-assisted engineering. The goal was to act as the **Product Architect**—designing system execution paths, defining Pydantic evaluation contracts, building synthetic data pipelines, and exploring production SaaS patterns.
+
+### Key Conceptual Explorations:
+* **LLM-Based Evaluation vs. Legacy ATS:** Moving past fragile keyword parsing to evaluate contextual skill proof and quantitative metric integrity (e.g., catching unanchored floating metrics and skill stuffing).
+* **Prompt Optimization & Gatekeeper Agents:** Implementing low-temperature guardrail agents to compress and translate raw human queries into structured schemas before inference.
+* **Zero-Token Analytics & Batch Testing:** Structuring headless testing workflows (`Branch B`) that execute multi-domain evaluation sweeps while logging data for local, zero-token cost benchmarking.
+* **SaaS Architecture Fundamentals:** Designing modular backends capable of decoupling into REST APIs and web interfaces (Phase 2 Frontend / Phase 3 Database).
+
+---
 
 This repository currently houses the core backend evaluation engine (Phase 1), operating as a unified runtime that seamlessly handles both individual resume audits and large-scale automated benchmarking.
 
