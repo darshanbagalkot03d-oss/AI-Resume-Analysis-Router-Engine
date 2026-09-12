@@ -44,10 +44,11 @@ The core backend evaluation harness (appv3.0.py), featuring dynamic prompt routi
 #### Phase 2 (Planned): 
 A decoupled React/Next.js frontend UI to consume the benchmark JSON logs and provide a visual dashboard.
 
-#### Phase 3 (Planned)
+#### Phase 3 (Planned): 
 Database integration for persistent user session state and authentication
+
 ---
-✨ Key Features
+## ✨ Key Features
 * Pydantic Structured Evaluation Schema: Enforces strict, type-safe JSON output (CandidateEvaluationSchema) tracking Flaw A (Unbacked Skills), Flaw B (Unanchored Metrics), and Flaw C (Multi-Role Boundary Mapping).
 
 * Dual-Path Prompt Routing (Branch A):
