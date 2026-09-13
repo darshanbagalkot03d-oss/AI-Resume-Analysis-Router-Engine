@@ -55,6 +55,67 @@ def rotate_client():
         return True
     return False
 
+def evaluate_file_with_fallback(pdf_path: str, prompt_text: str, response_schema):
+    """Executes model generation with key rotation and 429 rate limit backoff."""
+    global client
+    uploaded_file = None
+
+    for attempt in range(5):
+        try:
+            # 1. Upload file inside the TRY block so 429s on upload are caught
+            if not uploaded_file:
+                uploaded_file = client.files.upload(file=pdf_path)
+                estimate_tokens(uploaded_file, prompt_text)
+
+            # 2. Generate Content
+            config = types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=response_schema,
+                temperature=0.1
+            )
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=[uploaded_file, prompt_text],
+                config=config
+            )
+
+            # 3. Cleanup on Success
+            try:
+                client.files.delete(name=uploaded_file.name)
+            except Exception:
+                pass
+            
+            return response
+
+        except errors.APIError as e:
+            error_msg = str(e).lower()
+
+            # 4. Cleanup stale file state on failure to ensure clean re-upload
+            if uploaded_file:
+                try:
+                    client.files.delete(name=uploaded_file.name)
+                except Exception:
+                    pass
+                uploaded_file = None  # Reset so it re-uploads cleanly on the next attempt
+
+            # 5. Handle 429 RPM limit (Wait 45s)
+            if "429" in error_msg and "quota" not in error_msg:
+                print(f"   ⚠️ Per-minute rate limit hit. Pausing 45s before retry ({attempt + 1}/5)...")
+                time.sleep(45)
+                continue  # Loops back to start of 'for' loop and re-uploads safely
+
+            # 6. Handle Hard Daily Quota Limits (Rotate Key)
+            elif "quota" in error_msg or "exhausted" in error_msg or "429" in error_msg:
+                if rotate_client():
+                    print("   🔄 Re-uploading file under new key context...")
+                    continue  # Loops back and uses the new 'client' to upload
+                else:
+                    raise RuntimeError("STOP_QUOTA_EXHAUSTED: All provided API keys have hit daily limits.")
+            else:
+                raise e
+
+    raise RuntimeError("Failed execution after maximum retries.")
+
 # Dynamic Case Registry mapping Prompt Cases to Schemas and JD Requirements
 PROMPT_REGISTRY = {
     "case_1": {"prompt": PROMPT_CASE_1, "requires_jd": False, "schema": CandidateEvaluationSchema},
@@ -65,21 +126,60 @@ PROMPT_REGISTRY = {
 }
 
 # --- FEATURE 1: GATEKEEPER AGENT ---
+# def run_gatekeeper_agent(user_query: str) -> str:
+    # """Optimizes and compresses raw custom user prompts or user-provided JDs using the Gatekeeper System Prompt."""
+    # print("⚙️ [Gatekeeper Agent] Compressing and optimizing custom prompt instructions...")
+    # response = client.models.generate_content(
+        # model=MODEL_NAME,
+        # contents=f"Compress and structure this prompt:\n\n{user_query}",
+        # config={
+            # "system_instruction": GATEKEEPER_SYSTEM_PROMPT,
+            # "temperature": 0.1,
+        # }
+    # )
+    # optimized_prompt = response.text.strip()
+    # print("✅ Prompt optimization complete.")
+    # return optimized_prompt
+
 def run_gatekeeper_agent(user_query: str) -> str:
     """Optimizes and compresses raw custom user prompts or user-provided JDs using the Gatekeeper System Prompt."""
     print("⚙️ [Gatekeeper Agent] Compressing and optimizing custom prompt instructions...")
-    response = client.models.generate_content(
-        model=MODEL_NAME,
-        contents=f"Compress and structure this prompt:\n\n{user_query}",
-        config={
-            "system_instruction": GATEKEEPER_SYSTEM_PROMPT,
-            "temperature": 0.1,
-        }
-    )
-    optimized_prompt = response.text.strip()
-    print("✅ Prompt optimization complete.")
-    return optimized_prompt
+    global client
 
+    for attempt in range(5):
+        try:
+            response = client.models.generate_content(
+                model=MODEL_NAME,
+                contents=f"Compress and structure this prompt:\n\n{user_query}",
+                config={
+                    "system_instruction": GATEKEEPER_SYSTEM_PROMPT,
+                    "temperature": 0.1,
+                }
+            )
+            optimized_prompt = response.text.strip()
+            print("✅ Prompt optimization complete.")
+            return optimized_prompt
+
+        except errors.APIError as e:
+            error_msg = str(e).lower()
+
+            # Handle 429 RPM limit
+            if "429" in error_msg and "quota" not in error_msg:
+                print(f"   ⚠️ [Gatekeeper] Rate limit hit. Pausing 45s before retry ({attempt + 1}/5)...")
+                time.sleep(45)
+                continue
+
+            # Handle Hard Daily Quota Limits (Rotate Key)
+            elif "quota" in error_msg or "exhausted" in error_msg or "429" in error_msg:
+                if rotate_client():
+                    print("   🔄 [Gatekeeper] Quota exhausted. Retrying under new key context...")
+                    continue
+                else:
+                    raise RuntimeError("STOP_QUOTA_EXHAUSTED: All provided API keys hit daily limits during Gatekeeper phase.")
+            else:
+                raise e
+
+    raise RuntimeError("Gatekeeper agent failed after maximum retries.")
 
 # --- FEATURE 2: PRE-FLIGHT TOKEN AUDIT ---
 def estimate_tokens(uploaded_file, prompt_text: str):

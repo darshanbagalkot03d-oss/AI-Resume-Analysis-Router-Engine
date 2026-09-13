@@ -1,18 +1,39 @@
 import os
 import sys
+import time
 from dotenv import load_dotenv
 from fpdf import FPDF
 from google import genai
+from google.genai import errors, types
 
 load_dotenv()
-API_KEY = os.getenv("GEMINI_API_KEY")
 
-if not API_KEY:
-    print("❌ Error: GEMINI_API_KEY missing in .env file.")
+# --- MULTI-KEY ROTATION POOL INITIALIZATION ---
+API_KEYS = []
+for k in ["GEMINI_API_KEY_1", "GEMINI_API_KEY_2", "GEMINI_API_KEY"]:
+    val = os.getenv(k)
+    if val and val not in API_KEYS:
+        API_KEYS.append(val)
+
+if not API_KEYS:
+    print("❌ Error: No valid API keys (GEMINI_API_KEY_1, GEMINI_API_KEY_2, GEMINI_API_KEY) found in .env.")
     sys.exit(1)
 
-client = genai.Client(api_key=API_KEY)
-MODEL_NAME = "gemini-3-flash-preview"
+current_key_index = 0
+client = genai.Client(api_key=API_KEYS[current_key_index])
+
+MODEL_NAME = "gemini-3.6-flash"
+
+def rotate_client():
+    """Hot-swaps API client to backup key on hard daily quota limits."""
+    global current_key_index, client
+    if current_key_index + 1 < len(API_KEYS):
+        current_key_index += 1
+        print(f"\n   🔄 Daily Quota Exhausted! Swapping to API Key #{current_key_index + 1}...\n")
+        client = genai.Client(api_key=API_KEYS[current_key_index])
+        return True
+    return False
+
 
 DOMAINS = {
     "AI_DataScience": "Artificial Intelligence, MLOps, Computer Vision, & Data Engineering",
@@ -72,7 +93,8 @@ def generate_synthetic_resumes(count_per_archetype: int = 3):
     Generates synthetic resume PDFs across all domains and archetypes.
     Default: 4 domains x 4 archetypes x 3 variations = 48 synthetic test resumes.
     """
-    print("🚀 Starting Synthetic Resume Corpus Generation...\n")
+    global client
+    print(f"🚀 Starting Synthetic Resume Corpus Generation (Active Key: #{current_key_index + 1})...\n")
     
     base_dir = "backend_system/test_corpus"
     os.makedirs(base_dir, exist_ok=True)
@@ -105,23 +127,52 @@ FORMAT REQUIREMENT:
 - Return ONLY the raw resume text. Do not include markdown meta-commentary, code blocks, or preamble.
 """
 
-                try:
-                    response = client.models.generate_content(
-                        model=MODEL_NAME,
-                        contents=prompt,
-                        config={"temperature": 0.7}
-                    )
-                    
-                    resume_text = response.text.strip()
-                    save_text_to_pdf(resume_text, pdf_path)
-                    print(f"  ✅ Generated: {pdf_filename}")
+                # Resilient execution loop with key rotation & 429 backoff
+                success = False
+                for attempt in range(5):
+                    try:
+                        response = client.models.generate_content(
+                            model=MODEL_NAME,
+                            contents=prompt,
+                            config={"temperature": 0.7}
+                        )
+                        
+                        resume_text = response.text.strip()
+                        save_text_to_pdf(resume_text, pdf_path)
+                        print(f"  ✅ Generated: {pdf_filename}")
+                        success = True
+                        time.sleep(2)  # brief pacing delay between calls
+                        break
 
-                except Exception as e:
-                    print(f"  ❌ Failed generating {pdf_filename}: {e}")
+                    except errors.APIError as e:
+                        error_msg = str(e).lower()
+
+                        # Handle 429 RPM rate limits
+                        if "429" in error_msg and "quota" not in error_msg:
+                            print(f"   ⚠️ Per-minute rate limit hit. Pausing 45s before retry ({attempt + 1}/5)...")
+                            time.sleep(45)
+                            continue
+
+                        # Handle Hard Daily Quota Limits (Rotate Key)
+                        elif "quota" in error_msg or "exhausted" in error_msg or "429" in error_msg:
+                            if rotate_client():
+                                print("   🔄 Retrying generation under new key context...")
+                                continue
+                            else:
+                                print("\n🛑 All API keys have reached daily limits.")
+                                sys.exit(0)
+                        else:
+                            print(f"  ❌ API Error generating {pdf_filename}: {e}")
+                            break
+                    except Exception as e:
+                        print(f"  ❌ Failed generating {pdf_filename}: {e}")
+                        break
+
+                if not success and not os.path.exists(pdf_path):
+                    print(f"  ❌ Skipped {pdf_filename} after maximum retries.")
 
     print(f"\n🎉 Corpus generation complete! All files saved to './{base_dir}/'")
 
 
 if __name__ == "__main__":
-    # Adjust count_per_archetype (e.g., 5 = 80 resumes, 7 = 112 resumes)
     generate_synthetic_resumes(count_per_archetype=3)
