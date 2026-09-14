@@ -205,12 +205,20 @@ python backend_system/compute_benchmarks.py
 
 ---
 
-## 📊 Sample Benchmark Dashboard Output
+## 📊 System Execution Modes & Sample Outputs
 
+The engine supports two primary execution flows depending on whether you are running large-scale system stress tests or evaluating individual resumes against specific job descriptions.
 
-```Bash
+---
+
+### 🛠️ 1. Developer Benchmarking Suite (Batch Mode)
+*Designed for developers evaluating LLM flaw detection strength across synthetic test corpora.*
+
+After running `generate_corpus.py` (which builds 48 synthetic test resumes containing injected anti-patterns) and processing them through the batch runner, executing `compute_benchmarks.py` generates aggregate accuracy metrics across the test suite:
+
+```bash
 ============================================================
-           SYSTEM BENCHMARK EVALUATION DASHBOARD
+               SYSTEM BENCHMARK EVALUATION DASHBOARD
 ============================================================
 Total Resumes Evaluated       : 48
 Total Quantitative Claims     : 144
@@ -220,5 +228,38 @@ Unbacked Skills Flagged       : 86
 Metric Severity Capture Rate  : 81.9%
 Hallucination / Schema Rate   : 0.00%
 ============================================================
+```
+---
+
+🎯 2. Single-File Targeted Audit (User Mode)
+Designed for end users or developers evaluating an individual resume against a specific custom job description.
+
+Bypass the batch runner to trigger an immediate, single-file evaluation using the --file and --jd flags:
+
+python appv3.0.py --file "my_resume.pdf" --case case_2 --jd "Seeking an AI Engineer experienced in fine-tuning LLMs, building RAG pipelines, deploying YOLO models, and orchestrating workflows using n8n."
+
+Console Output & Token Audit:
+
+```Bash
+🚀 Running Single-File Audit on: my_resume.pdf
+📝 Custom JD detected via --jd flag.
+⚙️ [Gatekeeper Agent] Compressing and optimizing custom prompt instructions...
+✅ Prompt optimization complete.
+   [Token Audit] Est. Input Tokens: 1591
+
+=============================== STRUCTURED REPORT (ATSEvaluationSchema) ====================================== 
+
+🎯 Overall ATS Match Score : 82.5%
+
+🔍 Quantitative Metric Audit Highlights:
+ • Claim: 'achieving 70.04% precision, 63.81% recall, and mAP@50-95 of 44.47% (COCO standard)'
+   Status: Unverified Metric (-15 pts) | Timeline: N/A | Scale: N/A
+ • Claim: 'Benchmarked trained model at 30.6 FPS (32.6ms latency) on an NVIDIA T4 GPU at 768px resolution'
+   Status: Unverified Metric (-15 pts) | Timeline: N/A | Scale: N/A
+
+==============================================================================================================
+
+[Token Audit] Final Output Tokens: 804
+[Token Audit] Total Tokens Consumed: 3963
 ```
 
