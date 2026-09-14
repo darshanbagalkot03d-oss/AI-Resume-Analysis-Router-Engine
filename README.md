@@ -231,7 +231,7 @@ Hallucination / Schema Rate   : 0.00%
 ```
 ---
 
-🎯 2. Single-File Targeted Audit (User Mode)
+### 🎯 2. Single-File Targeted Audit (User Mode)
 Designed for end users or developers evaluating an individual resume against a specific custom job description.
 
 Bypass the batch runner to trigger an immediate, single-file evaluation using the --file and --jd flags:
