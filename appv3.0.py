@@ -28,7 +28,7 @@ load_dotenv()
 
 # --- MULTI-KEY ROTATION POOL INITIALIZATION ---
 API_KEYS = []
-for k in ["GEMINI_API_KEY_1", "GEMINI_API_KEY_2", "GEMINI_API_KEY"]:
+for k in ["GEMINI_API_KEY_1", "GEMINI_API_KEY_2", "GEMINI_API_KEY_3", "GEMINI_API_KEY_4"]:
     val = os.getenv(k)
     if val and val not in API_KEYS:
         API_KEYS.append(val)
@@ -42,8 +42,8 @@ client = genai.Client(api_key=API_KEYS[current_key_index])
 
 
 MODEL_NAME = "gemini-3.6-flash"
-CORPUS_DIR = r"C:\Users\Admin\Desktop\Personal_Project\Exploring_the_Gemini_API_key\backend_system\test_corpus"
-OUTPUT_FILE = r"C:\Users\Admin\Desktop\Personal_Project\Exploring_the_Gemini_API_key\backend_system\benchmark_results.json"
+CORPUS_DIR = r"C:\Users\Admin\Desktop\Path_to_Your_folder"
+OUTPUT_FILE = r"C:\Users\Admin\Desktop\Path_to_Your_folder"
 
 def rotate_client():
     """Hot-swaps API client to backup key on hard daily quota limits."""
@@ -126,21 +126,6 @@ PROMPT_REGISTRY = {
 }
 
 # --- FEATURE 1: GATEKEEPER AGENT ---
-# def run_gatekeeper_agent(user_query: str) -> str:
-    # """Optimizes and compresses raw custom user prompts or user-provided JDs using the Gatekeeper System Prompt."""
-    # print("⚙️ [Gatekeeper Agent] Compressing and optimizing custom prompt instructions...")
-    # response = client.models.generate_content(
-        # model=MODEL_NAME,
-        # contents=f"Compress and structure this prompt:\n\n{user_query}",
-        # config={
-            # "system_instruction": GATEKEEPER_SYSTEM_PROMPT,
-            # "temperature": 0.1,
-        # }
-    # )
-    # optimized_prompt = response.text.strip()
-    # print("✅ Prompt optimization complete.")
-    # return optimized_prompt
-
 def run_gatekeeper_agent(user_query: str) -> str:
     """Optimizes and compresses raw custom user prompts or user-provided JDs using the Gatekeeper System Prompt."""
     print("⚙️ [Gatekeeper Agent] Compressing and optimizing custom prompt instructions...")
