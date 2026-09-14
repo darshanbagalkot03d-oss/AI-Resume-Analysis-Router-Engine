@@ -236,7 +236,9 @@ Designed for end users or developers evaluating an individual resume against a s
 
 Bypass the batch runner to trigger an immediate, single-file evaluation using the --file and --jd flags:
 
+```Bash
 python appv3.0.py --file "my_resume.pdf" --case case_2 --jd "Seeking an AI Engineer experienced in fine-tuning LLMs, building RAG pipelines, deploying YOLO models, and orchestrating workflows using n8n."
+```
 
 Console Output & Token Audit:
 
