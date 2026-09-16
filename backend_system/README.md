@@ -1,4 +1,4 @@
-# AI Candidate Evaluation & Benchmarking Engine (`appv3.0.py`)
+# AI Candidate Evaluation & Benchmarking Engine (`appv3.1.py`)
 
 Welcome to the backend documentation for the **AI Candidate Evaluation Engine**. This production-grade CLI system leverages Google's Gemini models with strict Pydantic schema enforcement, multi-key rotation, 429 rate-limit backoffs, and pre-flight token auditing to evaluate technical resumes across multiple domains.
 
@@ -8,14 +8,14 @@ Whether you are a **developer/tester** running multi-domain regression benchmark
 
 ## ⚙️ Backend Execution Routing
 
-The core engine (`appv3.0.py`) operates on a dual-branch execution model. It automatically routes your requests based on the flags you pass via the CLI, splitting traffic between targeted single-file audits and headless batch processing.
+The core engine (`appv3.1.py`) operates on a dual-branch execution model. It automatically routes your requests based on the flags you pass via the CLI, splitting traffic between targeted single-file audits and headless batch processing.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                      BACKEND EXECUTION ROUTING (appv3.0.py)                     │
+│                      BACKEND EXECUTION ROUTING (appv3.1.py)                     │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
-                                 [appv3.0.py]
+                                 [appv3.1.py]
                                       │
             ┌─────────────────────────┴────────────────────────┐
             ▼                                                  ▼
@@ -95,7 +95,7 @@ GEMINI_API_KEY_2=your_backup_gemini_api_key_here
 ## 🎯 Core Evaluation Cases
 The system provides 5 standardized prompt evaluation cases. Each case enforces its own dynamic Pydantic schema contract:
 
-In `appv3.0.py`, numerical prompt cases range from **`case_1`** to **`case_5`**. The custom query feature (which was Option 6 in the interactive `appv2.3.py` menu) is executed using the **`--custom`** CLI flag, where instructions are compressed by the Gatekeeper Agent.
+In `appv3.1.py`, numerical prompt cases range from **`case_1`** to **`case_5`**. The custom query feature (which was Option 6 in the interactive `appv2.3.py` menu) is executed using the **`--custom`** CLI flag, where instructions are compressed by the Gatekeeper Agent.
 
 Here is the updated complete table including all 6 evaluation capabilities:
 
@@ -111,7 +111,7 @@ Here is the updated complete table including all 6 evaluation capabilities:
 ---
 
 ### 🚀 Execution Guide: Choosing Your Branch
-You can run appv3.0.py in two distinct operational modes:
+You can run appv3.1.py in two distinct operational modes:
 
 ### Branch A: Single-File / Ad-Hoc Target Mode (--file)
 Designed for individual candidates, recruiters, or developers who want to audit a single resume PDF and receive rich terminal diagnostic reports.
@@ -120,7 +120,7 @@ Designed for individual candidates, recruiters, or developers who want to audit 
 Evaluate a resume against a target domain using pre-configured job descriptions (AI_DataScience, Cloud_DevOps, Cyber, or Software_Embedded):
 
 ```Bash
-python appv3.0.py --file "test_corpus/test_corpus/AI_DataScience/my_resume.pdf" --case case_2 --domain AI_DataScience
+python appv3.1.py --file "test_corpus/test_corpus/AI_DataScience/my_resume.pdf" --case case_2 --domain AI_DataScience
 ```
 
 #### Option 1b: Custom Job Description for case 2 (--jd)
@@ -129,14 +129,14 @@ Inject a raw Job Description directly from a job posting.
 > Note on Prompt Optimization: Any raw, user-provided text passed via --jd is automatically routed through the Gatekeeper Agent, which compresses and structures the JD before running the evaluation.
 
 ```Bash
-python appv3.0.py --file "test_corpus/test_corpus/AI_DataScience/my_resume.pdf" --case case_2 --jd "Looking for a Senior Cyber Security Engineer with experience in Cloud Sentinel, IAM, penetration testing, and Zero-Trust architecture."
+python appv3.1.py --file "test_corpus/test_corpus/AI_DataScience/my_resume.pdf" --case case_2 --jd "Looking for a Senior Cyber Security Engineer with experience in Cloud Sentinel, IAM, penetration testing, and Zero-Trust architecture."
 ```
 
 #### Option 1c: Custom Ad-Hoc Query (--custom)
 Ask specific questions or provide custom evaluation instructions for a resume. This query will be optimized by the Gatekeeper Agent:
 
 ```Bash
-python appv3.0.py --file "+test_corpus/AI_DataScience/my_resume.pdf" --custom "Evaluate if this candidate has hands-on experience in PyTorch, YOLO model deployment, and n8n workflow automation."
+python appv3.1.py --file "+test_corpus/AI_DataScience/my_resume.pdf" --custom "Evaluate if this candidate has hands-on experience in PyTorch, YOLO model deployment, and n8n workflow automation."
 ```
 
 ---
@@ -148,7 +148,7 @@ Designed for developers and researchers performing corpus-wide regression benchm
 Evaluates every resume across all subdirectories inside backend_system/test_corpus/ using a specific prompt case. Handles rate limits, API key rotation, and atomic logging automatically:
 
 ```Bash
-python appv3.0.py --case case_1
+python appv3.1.py --case case_1
 ```
 
 ##### User Use Case 2a: Test Fitness for a Specific Domain
@@ -157,7 +157,7 @@ python appv3.0.py --case case_1
 2. Run the batch engine for that case:
 
 ```Bash
-python appv3.0.py --case case_2
+python appv3.1.py --case case_2
 ```
 
 ##### User Use Case 2b: Test Cross-Domain Fitness (Multi-Domain Fit)
@@ -166,7 +166,7 @@ python appv3.0.py --case case_2
 2. Run the batch engine:
 
 ```Bash
-python appv3.0.py --case case_1
+python appv3.1.py --case case_1
 ```
 
 > Tip: Inspect benchmark_results.json to compare how your profile scores across different technical domains.

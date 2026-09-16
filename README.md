@@ -18,7 +18,7 @@ What I did:
 
 What AI tools did:
 
-* Wrote the actual Python implementation (appv3.0.py, the corpus generator, the benchmark calculator) based on the design above
+* Wrote the actual Python implementation (appv3.1.py, the corpus generator, the benchmark calculator) based on the design above
 
 I'm sharing this openly because architecting a system, defining what "correct" output looks like, and directing an AI to implement and iterate on it is itself a skill worth being transparent about — not something to obscure.
 
@@ -34,11 +34,11 @@ This repository serves as an **architectural lab** built using AI-assisted engin
 
 This repository currently houses the core backend evaluation engine (Phase 1), operating as a unified runtime that seamlessly handles both individual resume audits and large-scale automated benchmarking.
 
-The system utilizes a dual-branch execution model driven by a single unified runner (appv3.0.py):
+The system utilizes a dual-branch execution model driven by a single unified runner (appv3.1.py):
 
 * **Branch A** (Ad-Hoc Single-File Router): An interactive audit engine for evaluating individual resumes against static prompts, specific job descriptions, or unstructured custom queries optimized by a dedicated Gatekeeper Agent.
 
-* **Branch B** (Batch Automated Testing Harness): A headless pipeline (backend_system/generate_corpus.py → appv3.0.py → backend_system/compute_benchmarks.py) designed to stress-test system prompts against multi-domain synthetic edge-case corpora using strictly enforced Pydantic schemas and zero-token local analytics.
+* **Branch B** (Batch Automated Testing Harness): A headless pipeline (backend_system/generate_corpus.py → appv3.1.py → backend_system/compute_benchmarks.py) designed to stress-test system prompts against multi-domain synthetic edge-case corpora using strictly enforced Pydantic schemas and zero-token local analytics.
 
 ---
 
@@ -55,7 +55,7 @@ The system utilizes a dual-branch execution model driven by a single unified run
                │                        [PHASE 1: BACKEND CORE]
                │                         (Active: CLI Engine)
                ▼                                   │
-      [PHASE 3: DATABASE]                          ├─> [appv3.0.py Unified Runner]
+      [PHASE 3: DATABASE]                          ├─> [appv3.1.py Unified Runner]
      (Planned: State & Auth)                       ├─> [Branch A: Ad-Hoc Router]
                                                    ├─> [Branch B: Batch Evaluator]
                                                    └─> [Gatekeeper Agent]
@@ -69,7 +69,7 @@ The system utilizes a dual-branch execution model driven by a single unified run
                                           (benchmark_results.json & CLI stdout)
 ```
 #### Phase 1 (Active): 
-The core backend evaluation harness (appv3.0.py), featuring dynamic prompt routing, zero-token batch testing, and Pydantic-enforced structured outputs.
+The core backend evaluation harness (appv3.1.py), featuring dynamic prompt routing, zero-token batch testing, and Pydantic-enforced structured outputs.
 
 #### Phase 2 (Planned): 
 A decoupled React/Next.js frontend UI to consume the benchmark JSON logs and provide a visual dashboard.
@@ -116,14 +116,14 @@ Database integration for persistent user session state and authentication
 ├── .env                  # Local environment configuration file (API keys)
 ├── .env.example          # Environment variable template
 ├── .gitignore            # Git untracked file exclusion rules
-├── appv3.0.py            # Unified evaluation harness & main entry point
+├── appv3.1.py            # Unified evaluation harness & main entry point
 ├── requirements.txt      # Project dependencies
 └── README.md             # High-level system architecture documentation
 ```
 ---
 ## 🧰 Script Inventory & Role Descriptions
 
-1. appv3.0.py (Unified Evaluation Harness)
+1. appv3.1.py (Unified Evaluation Harness)
 * Role: Serves as the primary user-facing CLI application runner for both single-file ad-hoc evaluations and batch regression sweeps.
 
 * Mechanism: Handles --file flag selection for Branch A single-file audits or executes automated directory sweeps across backend_system/test_corpus/ for Branch B. Routes requests through static prompt cases or the Gatekeeper Agent, uploads files via Gemini Files API, logs results atomically to benchmark_results.json, and executes cloud file cleanups post-evaluation.
@@ -183,7 +183,7 @@ For detailed CLI flags and custom query usage, refer to the Backend Documentatio
 Run an ad-hoc evaluation on a specific resume file:
 
 ```Bash
-python appv3.0.py --file "backend_system/test_corpus/AI_DataScience/my_resume.pdf" --case case_1
+python appv3.1.py --file "backend_system/test_corpus/AI_DataScience/my_resume.pdf" --case case_1
 ```
 #### Branch B: Multi-Domain Automated Benchmarking
 Step 1: Generate or Populate Test Corpus
@@ -195,7 +195,7 @@ python backend_system/generate_corpus.py
 Step 2: Run the Batch Engine
 
 ```Bash
-python appv3.0.py --case case_1
+python appv3.1.py --case case_1
 ```
 Step 3: Compute System Benchmarks
 
@@ -237,7 +237,7 @@ Designed for end users or developers evaluating an individual resume against a s
 Bypass the batch runner to trigger an immediate, single-file evaluation using the --file and --jd flags:
 
 ```Bash
-python appv3.0.py --file "my_resume.pdf" --case case_2 --jd "Seeking an AI Engineer experienced in fine-tuning LLMs, building RAG pipelines, deploying YOLO models, and orchestrating workflows using n8n."
+python appv3.1.py --file "my_resume.pdf" --case case_2 --jd "Seeking an AI Engineer experienced in fine-tuning LLMs, building RAG pipelines, deploying YOLO models, and orchestrating workflows using n8n."
 ```
 
 Console Output & Token Audit:

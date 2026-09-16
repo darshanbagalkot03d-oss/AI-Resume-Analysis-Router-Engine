@@ -40,10 +40,10 @@ if not API_KEYS:
 current_key_index = 0
 client = genai.Client(api_key=API_KEYS[current_key_index])
 
-
 MODEL_NAME = "gemini-3.6-flash"
-CORPUS_DIR = r"C:\Users\Admin\Desktop\Path_to_Your_folder"
-OUTPUT_FILE = r"C:\Users\Admin\Desktop\Path_to_Your_folder"
+CORPUS_DIR = r"C:\Users\Admin\Desktop\Personal_Project\Exploring_the_Gemini_API_key\backend_system\test_corpus"
+OUTPUT_FILE = r"C:\Users\Admin\Desktop\Personal_Project\Exploring_the_Gemini_API_key\backend_system\benchmark_results.json"
+
 
 def rotate_client():
     """Hot-swaps API client to backup key on hard daily quota limits."""
@@ -54,6 +54,7 @@ def rotate_client():
         client = genai.Client(api_key=API_KEYS[current_key_index])
         return True
     return False
+
 
 def evaluate_file_with_fallback(pdf_path: str, prompt_text: str, response_schema):
     """Executes model generation with key rotation and 429 rate limit backoff."""
@@ -116,6 +117,7 @@ def evaluate_file_with_fallback(pdf_path: str, prompt_text: str, response_schema
 
     raise RuntimeError("Failed execution after maximum retries.")
 
+
 # Dynamic Case Registry mapping Prompt Cases to Schemas and JD Requirements
 PROMPT_REGISTRY = {
     "case_1": {"prompt": PROMPT_CASE_1, "requires_jd": False, "schema": CandidateEvaluationSchema},
@@ -124,6 +126,7 @@ PROMPT_REGISTRY = {
     "case_4": {"prompt": PROMPT_CASE_4, "requires_jd": False, "schema": CTOStrategyEvaluationSchema},
     "case_5": {"prompt": PROMPT_CASE_5, "requires_jd": True,  "schema": CoverLetterEvaluationSchema},
 }
+
 
 # --- FEATURE 1: GATEKEEPER AGENT ---
 def run_gatekeeper_agent(user_query: str) -> str:
@@ -166,6 +169,7 @@ def run_gatekeeper_agent(user_query: str) -> str:
 
     raise RuntimeError("Gatekeeper agent failed after maximum retries.")
 
+
 # --- FEATURE 2: PRE-FLIGHT TOKEN AUDIT ---
 def estimate_tokens(uploaded_file, prompt_text: str):
     """Calculates input token count before sending request to model."""
@@ -189,37 +193,157 @@ def print_rich_console_summary(eval_data, schema_name: str):
         print(f"📊 Adjusted Technical Score : {eval_data.adjusted_technical_score} / 100")
     if hasattr(eval_data, "overall_ats_match_score"):
         print(f"🎯 Overall ATS Match Score : {eval_data.overall_ats_match_score}%")
+    if hasattr(eval_data, "market_readiness_score"):
+        print(f"📊 Market Readiness Score : {eval_data.market_readiness_score}/10")
 
-    # Metrics Audit Output
+    # Case 1: Candidate Profile Summary
+    if hasattr(eval_data, "candidate_profile_identity"):
+        print(f"\n🧑 Profile: {eval_data.candidate_profile_identity}")
+    if hasattr(eval_data, "primary_technical_differentiators") and eval_data.primary_technical_differentiators:
+        print("\n⭐ Primary Technical Differentiators:")
+        for diff in eval_data.primary_technical_differentiators[:5]:
+            print(f"  • {diff}")
+
+    # Case 2: ATS Summary
+    if hasattr(eval_data, "keyword_density_score"):
+        print(f"🔑 Keyword Density Score : {eval_data.keyword_density_score}")
+    if hasattr(eval_data, "summary_assessment"):
+        print(f"📝 Summary Assessment: {eval_data.summary_assessment}")
+
+    # Metrics Audit Output (shared: Case 1 & 2)
     if hasattr(eval_data, "metrics_audit") and eval_data.metrics_audit:
         print("\n🔍 Quantitative Metric Audit Highlights:")
         for audit in eval_data.metrics_audit[:5]:  # Display top 5
             claim = getattr(audit, "original_claim", "N/A")
             status = getattr(audit, "validation_status", "N/A")
-            timeline = getattr(audit, "has_timeline_scope", getattr(audit, "has_timeline", "N/A"))
-            scale = getattr(audit, "has_scaling_bound", getattr(audit, "has_scale", "N/A"))
+            timeline = getattr(audit, "timeline_scope_present", "N/A")
+            scale = getattr(audit, "scaling_bounds_present", "N/A")
             print(f"  • Claim: '{claim}'")
             print(f"    Status: {status} | Timeline: {timeline} | Scale: {scale}")
 
-    # Skill Proofs / Flaw A Check
+    # Skill Proofs / Flaw A Check (Case 1 only)
     if hasattr(eval_data, "skill_proofs") and eval_data.skill_proofs:
         print("\n🛡️ Skill Integrity & Project Proof Audit:")
         for proof in eval_data.skill_proofs[:5]:
             skill_name = getattr(proof, "skill_name", "N/A")
-            has_proof = getattr(proof, "has_project_proof", False)
+            has_proof = getattr(proof, "is_anchored_in_project", False)
             status = "✅ Project Verified" if has_proof else "⚠️ Unanchored Skill"
             print(f"  • Skill: {skill_name} | Status: {status}")
 
-    # Capability / Gap Highlights
-    if hasattr(eval_data, "missing_critical_technologies") and eval_data.missing_critical_technologies:
-        print("\n⚠️ Missing Critical Technologies:")
-        for tech in eval_data.missing_critical_technologies[:5]:
+    # Case 1: Multi-Domain Capability Matrix (Flaw C) — previously never printed
+    if hasattr(eval_data, "evaluated_roles") and eval_data.evaluated_roles:
+        print("\n🌐 Multi-Domain Capability Matrix (>=70% Fit):")
+        for role in eval_data.evaluated_roles[:5]:
+            domain = getattr(role, "domain_category", "N/A")
+            title = getattr(role, "matched_role_title", "N/A")
+            score = getattr(role, "match_score_percentage", "N/A")
+            print(f"  • {title} ({domain}) — {score}% match")
+
+    # Case 1 / Case 2: Missing Skills & Tech (correct field names — old check never matched either schema)
+    if hasattr(eval_data, "missing_market_skills") and eval_data.missing_market_skills:
+        print("\n⚠️ Missing Market Skills:")
+        for tech in eval_data.missing_market_skills[:5]:
             print(f"  • {tech}")
 
-    if hasattr(eval_data, "high_severity_strategic_gaps") and eval_data.high_severity_strategic_gaps:
-        print("\n🚨 High Severity Strategic Gaps:")
-        for gap in eval_data.high_severity_strategic_gaps[:5]:
-            print(f"  • {gap}")
+    if hasattr(eval_data, "missing_required_technologies") and eval_data.missing_required_technologies:
+        print("\n⚠️ Missing Required Technologies:")
+        for tech in eval_data.missing_required_technologies[:5]:
+            print(f"  • {tech}")
+
+    if hasattr(eval_data, "missing_architectural_keywords") and eval_data.missing_architectural_keywords:
+        print("\n🏗️ Missing Architectural Keywords:")
+        for kw in eval_data.missing_architectural_keywords[:5]:
+            print(f"  • {kw}")
+
+    if hasattr(eval_data, "formatting_recommendations") and eval_data.formatting_recommendations:
+        print("\n📐 Formatting Recommendations:")
+        for rec in eval_data.formatting_recommendations[:5]:
+            print(f"  • {rec}")
+
+    # Case 2: ATS Bullet Rewrites — previously never printed
+    if hasattr(eval_data, "bullet_rewrites") and eval_data.bullet_rewrites:
+        print("\n✍️ ATS Bullet Rewrites:")
+        for bullet in eval_data.bullet_rewrites[:5]:
+            original = getattr(bullet, "original_bullet", "N/A")
+            rewritten = getattr(bullet, "ats_rewritten_bullet", "N/A")
+            print(f"  • Original: {original}")
+            print(f"    Rewritten: {rewritten}")
+
+    # Case 3: Architect Schema — previously only adjusted_technical_score printed
+    if hasattr(eval_data, "primary_languages") and eval_data.primary_languages:
+        print("\n💻 Primary Languages:")
+        for lang in eval_data.primary_languages[:5]:
+            print(f"  • {lang}")
+
+    if hasattr(eval_data, "core_frameworks_tools") and eval_data.core_frameworks_tools:
+        print("\n🧰 Core Frameworks & Tools:")
+        for tool in eval_data.core_frameworks_tools[:5]:
+            print(f"  • {tool}")
+
+    if hasattr(eval_data, "hardware_edge_exposure") and eval_data.hardware_edge_exposure:
+        print("\n🔌 Hardware / Edge Exposure:")
+        for hw in eval_data.hardware_edge_exposure[:5]:
+            print(f"  • {hw}")
+
+    if hasattr(eval_data, "unanchored_claims_flagged") and eval_data.unanchored_claims_flagged:
+        print("\n🚩 Unanchored Claims Flagged:")
+        for claim in eval_data.unanchored_claims_flagged[:5]:
+            print(f"  • {claim}")
+
+    if hasattr(eval_data, "qualified_technical_roles") and eval_data.qualified_technical_roles:
+        print("\n🎯 Qualified Technical Roles (>=70%):")
+        for role in eval_data.qualified_technical_roles[:5]:
+            print(f"  • {role}")
+
+    if hasattr(eval_data, "code_portfolio_action_items") and eval_data.code_portfolio_action_items:
+        print("\n✅ Code & Portfolio Action Items:")
+        for item in eval_data.code_portfolio_action_items[:5]:
+            print(f"  • {item}")
+
+    # Case 4: CTO Strategy Benchmark Output
+    if hasattr(eval_data, "benchmark_matrix") and eval_data.benchmark_matrix:
+        print("\n📈 Top 5% Benchmark Matrix:")
+        for dim in eval_data.benchmark_matrix[:5]:
+            name = getattr(dim, "dimension_name", "N/A")
+            standard = getattr(dim, "top_5_percent_standard", "N/A")
+            level = getattr(dim, "candidate_current_level", "N/A")
+            gap = getattr(dim, "gap_severity", "N/A")
+            print(f"  • {name} | Standard: {standard} | Candidate: {level} | Gap: {gap}")
+
+    if hasattr(eval_data, "primary_domain_fits") and eval_data.primary_domain_fits:
+        print("\n🎯 Primary Domain Fits:")
+        for role in eval_data.primary_domain_fits[:5]:
+            print(f"  • {role}")
+
+    if hasattr(eval_data, "adjacent_domain_fits") and eval_data.adjacent_domain_fits:
+        print("\n🧩 Adjacent Domain Fits:")
+        for role in eval_data.adjacent_domain_fits[:5]:
+            print(f"  • {role}")
+
+    if hasattr(eval_data, "phase_1_30_day_milestone"):
+        print(f"\n🗓️ 60-Day Roadmap — Days 1-30: {eval_data.phase_1_30_day_milestone}")
+        for task in getattr(eval_data, "phase_1_tasks_deliverable", [])[:5]:
+            print(f"  • {task}")
+
+    if hasattr(eval_data, "phase_2_60_day_milestone"):
+        print(f"\n🗓️ Days 31-60: {eval_data.phase_2_60_day_milestone}")
+        for task in getattr(eval_data, "phase_2_tasks_deliverable", [])[:5]:
+            print(f"  • {task}")
+
+    # Case 5: Cover Letter Output — now includes candidate name + projects_highlighted (were missing)
+    if hasattr(eval_data, "cover_letter_text") and eval_data.cover_letter_text:
+        name = getattr(eval_data, "candidate_full_name", "N/A")
+        role = getattr(eval_data, "target_role_title", "N/A")
+        print(f"\n✉️ Generated Cover Letter — {name} for {role}:")
+        print(eval_data.cover_letter_text)
+        if hasattr(eval_data, "projects_highlighted") and eval_data.projects_highlighted:
+            print("\n📁 Projects Highlighted:")
+            for proj in eval_data.projects_highlighted[:5]:
+                print(f"  • {proj}")
+        if hasattr(eval_data, "verified_metrics_used") and eval_data.verified_metrics_used:
+            print("\n✅ Verified Metrics Used:")
+            for m in eval_data.verified_metrics_used[:5]:
+                print(f"  • {m}")
 
     print("\n" + "=" * 110 + "\n")
 
@@ -247,68 +371,6 @@ def append_single_result(record):
     existing_data.append(record)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(existing_data, f, indent=2)
-
-
-def rotate_client():
-    """Hot-swaps API client to backup key on hard daily quota limits."""
-    global current_key_index, client
-    if current_key_index + 1 < len(API_KEYS):
-        current_key_index += 1
-        print(f"\n   🔄 Daily Quota Exhausted! Swapping to API Key #{current_key_index + 1}...\n")
-        client = genai.Client(api_key=API_KEYS[current_key_index])
-        return True
-    return False
-
-
-# --- RESILIENT EXECUTION CORE ---
-def evaluate_file_with_fallback(pdf_path: str, prompt_text: str, response_schema):
-    """Executes model generation with key rotation and 429 rate limit backoff."""
-    global client
-    
-    uploaded_file = client.files.upload(file=pdf_path)
-    estimate_tokens(uploaded_file, prompt_text)
-
-    for attempt in range(5):
-        try:
-            config = types.GenerateContentConfig(
-                response_mime_type="application/json",
-                response_schema=response_schema,
-                temperature=0.1
-            )
-            response = client.models.generate_content(
-                model=MODEL_NAME,
-                contents=[uploaded_file, prompt_text],
-                config=config
-            )
-            
-            client.files.delete(name=uploaded_file.name)
-            return response
-
-        except errors.APIError as e:
-            error_msg = str(e).lower()
-
-            try:
-                client.files.delete(name=uploaded_file.name)
-            except Exception:
-                pass
-
-            # Handle 429 RPM limit (Wait 45s)
-            if "429" in error_msg and "quota" not in error_msg:
-                print(f"   ⚠️ Per-minute rate limit (RPM) hit. Pausing 45s before retry ({attempt + 1}/5)...")
-                time.sleep(45)
-                uploaded_file = client.files.upload(file=pdf_path)
-
-            # Handle Hard Daily Quota Limits (Rotate Key)
-            elif "quota" in error_msg or "exhausted" in error_msg or "429" in error_msg:
-                if rotate_client():
-                    print("   Re-uploading file under new key context...")
-                    uploaded_file = client.files.upload(file=pdf_path)
-                else:
-                    raise RuntimeError("STOP_QUOTA_EXHAUSTED: All provided API keys have hit daily limits.")
-            else:
-                raise e
-
-    raise RuntimeError("Failed execution after maximum retries.")
 
 
 # --- BRANCH A: SINGLE FILE / AD-HOC TARGET EXECUTION ---
