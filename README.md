@@ -243,26 +243,53 @@ python appv3.1.py --file "my_resume.pdf" --case case_2 --jd "Seeking an AI Engin
 Console Output & Token Audit:
 
 ```Bash
-🚀 Running Single-File Audit on: my_resume.pdf
-📝 Custom JD detected via --jd flag.
+🚀 Running Single-File Audit on: my_resume.pdf📝 Custom JD detected via --jd flag.
 ⚙️ [Gatekeeper Agent] Compressing and optimizing custom prompt instructions...
-✅ Prompt optimization complete.
-   [Token Audit] Est. Input Tokens: 1591
+✅ Prompt optimization complete.   
+[Token Audit] Est. Input Tokens: 1670
+==================================== STRUCTURED REPORT (ATSEvaluationSchema)===================================== 
 
-=============================== STRUCTURED REPORT (ATSEvaluationSchema) ====================================== 
-
-🎯 Overall ATS Match Score : 82.5%
+🎯 Overall ATS Match Score : 85.0%
+🔑 Keyword Density Score : High
+📝 Summary Assessment: The candidate demonstrates strong technical alignment with target requirements, featuring direct project experience with n8n workflow orchestration, YOLO vision model deployment, and RAG architectures. However, while LLM fine-tuning is listed in the skills inventory, explicit project-based evidence of fine-tuning Large Language Models is absent.
+In the skills inventory, explicit project-based evidence of fine-tuning Large Language Models is absent.  
 
 🔍 Quantitative Metric Audit Highlights:
- • Claim: 'achieving 70.04% precision, 63.81% recall, and mAP@50-95 of 44.47% (COCO standard)'
-   Status: Unverified Metric (-15 pts) | Timeline: N/A | Scale: N/A
- • Claim: 'Benchmarked trained model at 30.6 FPS (32.6ms latency) on an NVIDIA T4 GPU at 768px resolution'
-   Status: Unverified Metric (-15 pts) | Timeline: N/A | Scale: N/A
+  • Claim: 'achieving 70.04% precision, 63.81% recall, and mAP@50-95 of 44.47% (COCO standard)'
+    Status: Unverified Metric (-15 pts) | Timeline: False | Scale: False
+  • Claim: 'Benchmarked trained model at 30.6 FPS (32.6ms latency) on an NVIDIA T4 GPU at 768px resolution'
+    Status: Unverified Metric (-15 pts) | Timeline: False | Scale: False
 
+⚠️ Missing Required Technologies:
+  • LLM Fine-Tuning Libraries (e.g., PEFT, QLoRA, Hugging Face Transformers)
+
+🏗️ Missing Architectural Keywords:
+  • Vector Databases (e.g., Pinecone, Qdrant)
+  • LLM Fine-Tuning Execution
+
+📐 Formatting Recommendations:
+  • Anchor 'Fine-Tuning' skills directly into project bullet points demonstrating applied LLM adaptation rather than keeping it static in the skills block.          
+
+  • Specify vector database tools and embedding strategies utilized within RAG pipeline descriptions.
+
+✍️ ATS Bullet Rewrites:
+  • Original: Integrated Mistral LLMs with SerpApi as a retrieval layer to cross-check and fact-verify raw user reports in real time
+, grounding LLM-generated crisis summaries in external data, a retrieval-augmented approach to reducing unreliable output. 
+
+Rewritten: Engineered a production RAG pipeline integrating Mistral LLMs with SerpApi via n8n, grounding real-time crisis data to reduce output hallucinations 35%. 
+
+• Original: Practiced prompt engineering extensively, iteratively testing and evaluating prompts across generative AI tools to reliably produce high-quality outputs, applying this directly to design the Crisis Command Centre agentic workflow.  
+
+Rewritten: Optimized multi-agent prompt routing and structured guardrails in n8n, increasing autonomous output reliability and response accuracy across automated AI workflow. 
+                                                                                     
+• Original: Trained a YOLOv8 model on a custom-curated dataset of 7,518 images across 5 weed classes, achieving 70.04% precision,63.81% recall, and mAP@50-95 of 44.47% (COCO standard).
+
+Rewritten: Fine-tuned and deployed a YOLOv8 object detection model on 7,518 images using Roboflow, achieving 44.47% mAP@50-95 at
+ 30.6 FPS on an NVIDIA T4 GPU.                                                                                                      
 ==============================================================================================================
 
-[Token Audit] Final Output Tokens: 804
-[Token Audit] Total Tokens Consumed: 3963
+[Token Audit] Final Output Tokens: 858
+[Token Audit] Total Tokens Consumed: 4528
 ```
 
 ## 📄 License & Open Usage
