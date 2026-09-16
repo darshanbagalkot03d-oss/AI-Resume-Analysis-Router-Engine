@@ -4,7 +4,7 @@ A CLI-driven AI Resume Audit and Evaluation Platform built with Python and the G
 
 ---
 
-## 🙋 My Role in This Project
+##  My Role in This Project
 
 I built this to learn — not to showcase raw coding output. My goals were to understand how modern resume-analysis systems actually work under the hood, get hands-on exposure to how a small SaaS-style product is structured end-to-end, and develop a real feel for prompt optimization.
 
