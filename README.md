@@ -265,3 +265,14 @@ Console Output & Token Audit:
 [Token Audit] Total Tokens Consumed: 3963
 ```
 
+## 📄 License & Open Usage
+This project is open-source software provided under the MIT License.
+
+Developers, recruiters, and learners are explicitly permitted and encouraged to:
+
+* Clone this repository locally for experimentation, benchmarking, or development.
+
+* Run Evaluations & Stress Tests against your own resumes or custom test suites.
+
+* Adapt & Modify the prompt engineering patterns, Gatekeeper logic, and Pydantic schemas for your own SaaS backend tools or local automated audit pipelines.
+
