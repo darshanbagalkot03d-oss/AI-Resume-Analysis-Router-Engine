@@ -41,8 +41,8 @@ current_key_index = 0
 client = genai.Client(api_key=API_KEYS[current_key_index])
 
 MODEL_NAME = "gemini-3.6-flash"
-CORPUS_DIR = r"C:\Users\Admin\Desktop\Personal_Project\Exploring_the_Gemini_API_key\backend_system\test_corpus"
-OUTPUT_FILE = r"C:\Users\Admin\Desktop\Personal_Project\Exploring_the_Gemini_API_key\backend_system\benchmark_results.json"
+CORPUS_DIR = r"C:\Users\Admin\Desktop\Your_Project_Folder...\test_corpus"
+OUTPUT_FILE = r"C:\Users\Admin\Desktop\Your_Project_Folder...\backend_system\benchmark_results.json"
 
 
 def rotate_client():
